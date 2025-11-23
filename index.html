@@ -24,7 +24,9 @@
     @media(max-width:900px){.hero{grid-template-columns:1fr;}.grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:540px){.grid{grid-template-columns:1fr}.hero h1{font-size:28px}}
     .modal{position:fixed;inset:0;background:rgba(2,3,4,0.8);display:none;align-items:center;justify-content:center;padding:24px}
-    .modal .card{width:min(1000px,98%);background:#060607;border-radius:10px;padding:18px;color:#e9f2f0}
+    .modal[aria-hidden="false"]{display:flex}
+    .modal .card{width:min(1000px,98%);background:#060607;border-radius:10px;padding:18px;color:#e9f2f0;pointer-events:auto}
+    .modal .card:focus{outline:2px solid rgba(126,224,181,0.15)}
     .close{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:6px 8px;border-radius:6px;cursor:pointer}
     footer{color:var(--muted);text-align:center;padding:26px 0;font-size:14px}
   </style>
@@ -48,33 +50,38 @@
           <button class="cta" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">View Work</button>
         </div>
       </div>
-      <!-- Hero preview (replace existing preview video block) -->
-<div class="preview-card">
-  <video muted autoplay loop playsinline width="360">
-    <source src="D:\vfx-portfolio\assets\videos\haki_aura1.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
 
-<!-- Project card for Haki Aura (replace the proj block for Haki Aura) -->
-<div class="proj" data-title="Haki Aura" data-desc="Glowing aura with subtle particles and sound sync" data-tools="Roblox Studio;Lua;Audio edit" onclick="openModal(this)">
-  <video muted loop playsinline preload="metadata">
-    <source src="D:\vfx-portfolio\assets\videos\haki_aura1.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <div class="meta"><strong>Haki Aura</strong> • Aura</div>
-</div>
+      <!-- Hero preview (using video at repo root: haki_aura1.mp4) -->
+      <div class="preview-card">
+        <video muted autoplay loop playsinline preload="metadata" width="360" poster="assets/img/haki_thumb.webp">
+          <source src="haki_aura1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
 
+    <section id="work">
+      <h2 style="margin-top:34px">Selected Projects</h2>
+      <div class="grid" id="projects">
+        <!-- Haki Aura project (video at repo root: haki_aura1.mp4) -->
+        <div class="proj" data-title="Haki Aura" data-desc="Glowing aura with subtle particles and sound sync" data-tools="Roblox Studio;Lua;Audio edit" onclick="openModal(this)">
+          <video muted loop playsinline preload="metadata" poster="assets/img/haki_thumb.webp">
+            <source src="haki_aura1.mp4" type="video/mp4">
+          </video>
+          <div class="meta"><strong>Haki Aura</strong> • Aura</div>
+        </div>
+
+        <!-- other projects (adjust paths as needed) -->
         <div class="proj" data-title="Lightning Burst" data-desc="Burst particles with trailing sparks" data-tools="ParticleEmitter;SFX;TweenService" onclick="openModal(this)">
-          <video muted loop playsinline preload="metadata">
-            <source src="proj2_preview.mp4" type="video/mp4">
+          <video muted loop playsinline preload="metadata" poster="assets/img/lightning_thumb.webp">
+            <source src="assets/videos/proj2_preview.mp4" type="video/mp4">
           </video>
           <div class="meta"><strong>Lightning Burst</strong> • Explosion</div>
         </div>
 
         <div class="proj" data-title="Subtle Glow" data-desc="Low-cost glow using textured sprites and LOD" data-tools="Texture atlas;LOD;Audio loop" onclick="openModal(this)">
-          <video muted loop playsinline preload="metadata">
-            <source src="proj3_preview.mp4" type="video/mp4">
+          <video muted loop playsinline preload="metadata" poster="assets/img/glow_thumb.webp">
+            <source src="assets/videos/proj3_preview.mp4" type="video/mp4">
           </video>
           <div class="meta"><strong>Subtle Glow</strong> • Aura</div>
         </div>
@@ -82,8 +89,8 @@
     </section>
   </main>
 
-  <div class="modal" id="modal">
-    <div class="card" role="dialog" aria-modal="true">
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="card" role="dialog" aria-modal="true" tabindex="-1">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <div>
           <h3 id="m-title" style="margin:0"></h3>
@@ -106,51 +113,93 @@
   </footer>
 
   <script>
-    function openModal(el){
+    // Modal handling: open, close, click-outside, Esc, stop media
+    const modal = document.getElementById('modal');
+    const modalCard = modal.querySelector('.card');
+    const mediaContainer = document.getElementById('m-media');
+
+    function openModal(el) {
       const title = el.dataset.title;
       const desc = el.dataset.desc;
       const tools = el.dataset.tools;
-      const videoSrc = el.querySelector('video source')?.getAttribute('src');
+      // prefer <source> attribute if present
+      const sourceEl = el.querySelector('video source');
+      const videoSrc = sourceEl ? sourceEl.getAttribute('src') : null;
+
       document.getElementById('m-title').textContent = title;
       document.getElementById('m-desc').textContent = desc;
       document.getElementById('m-tools').textContent = tools;
-      const media = document.getElementById('m-media');
-      media.innerHTML = '';
-      if(videoSrc){
+
+      mediaContainer.innerHTML = '';
+
+      if (videoSrc) {
         const v = document.createElement('video');
         v.src = videoSrc;
         v.controls = true;
         v.autoplay = true;
         v.loop = true;
         v.muted = true;
+        v.playsInline = true;
         v.style.width = '100%';
-        media.appendChild(v);
+        mediaContainer.appendChild(v);
+        v.play().catch(()=>{});
       }
-      document.getElementById('modal').style.display = 'flex';
+
+      modal.setAttribute('aria-hidden', 'false');
+      // focus modal card for accessibility
+      modalCard.focus();
       document.body.style.overflow = 'hidden';
     }
-    function closeModal(){
-      document.getElementById('modal').style.display = 'none';
+
+    function closeModal() {
+      // stop and remove media
+      const v = mediaContainer.querySelector('video');
+      if (v) {
+        try { v.pause(); v.removeAttribute('src'); v.load(); } catch(e){}
+      }
+      mediaContainer.innerHTML = '';
+
+      modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      const media = document.getElementById('m-media');
-      media.innerHTML = '';
     }
-    // Lazy-load videos on intersection
+
+    // close when clicking the overlay (but not when clicking inside the card)
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // prevent clicks inside the card from bubbling to overlay
+    modalCard.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+        closeModal();
+      }
+    });
+
+    // Lazy-load videos: ensure the <source> paths are relative and present in repo
     const vids = document.querySelectorAll('video[preload="metadata"]');
-    if('IntersectionObserver' in window){
-      const obs = new IntersectionObserver((entries)=>{
-        entries.forEach(e=>{
-          if(e.isIntersecting){
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
             const v = e.target;
-            if(!v.src) v.querySelector('source') && (v.src = v.querySelector('source').getAttribute('src'));
+            const src = v.querySelector('source')?.getAttribute('src');
+            if (src && !v.getAttribute('src')) v.src = src;
             v.play().catch(()=>{});
             obs.unobserve(v);
           }
         });
-      }, {rootMargin:'200px'});
-      vids.forEach(v=>obs.observe(v));
+      }, {rootMargin: '200px'});
+      vids.forEach(v => obs.observe(v));
     } else {
-      vids.forEach(v=>{v.querySelector('source') && (v.src = v.querySelector('source').getAttribute('src'));});
+      vids.forEach(v => {
+        const src = v.querySelector('source')?.getAttribute('src');
+        if (src && !v.getAttribute('src')) v.src = src;
+      });
     }
   </script>
 </body>
