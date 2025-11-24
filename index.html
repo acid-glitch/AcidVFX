@@ -58,22 +58,33 @@
       <h2 style="margin-top:34px">Examples</h2>
       <div class="grid" id="projects">
         <!-- Haki Aura project (video at repo root: haki_aura1.mp4) -->
-        <div class="proj" data-title="Haki Aura" data-desc="Glowing aura with subtle particles and sound sync" data-tools="Roblox Studio;Lua;Audio edit" onclick="openModal(this)">
+        <div class="proj" data-title="Haki Aura" data-desc="Glowing aura with subtle particles" data-tools="Roblox Studio;Lua;Audio edit" onclick="openModal(this)">
           <video muted loop playsinline preload="metadata" poster="assets/img/haki_thumb.webp">
             <source src="haki_aura1.mp4" type="video/mp4">
           </video>
           <div class="meta"><strong>Haki Aura</strong> • Aura</div>
         </div>
+        <!-- Ultra Instinct Aura project -->
+        <div class="proj" 
+          data-title="Ultra Instinct Aura" 
+          data-desc="Dynamic aura with shimmering particles and energy pulses" 
+          data-tools="Roblox Studio;Lua;ParticleEmitter;Audio sync" 
+          onclick="openModal(this)">
+          <video muted loop playsinline preload="metadata" poster="assets/img/ultra_thumb.webp">
+            <source src="ultra_instinct1.mp4" type="video/mp4">
+          </video>
+          <div class="meta"><strong>Ultra Instinct Aura</strong> • Aura</div>
+        </div>
 
         <!-- Lightning Burst now uses explosion_1.mp4 -->
-        <div class="proj" data-title="Lightning Burst" data-desc="Burst particles with trailing sparks" data-tools="ParticleEmitter;SFX;TweenService" onclick="openModal(this)">
+        <div class="proj" data-title="Lightning Burst" data-desc="Burst particles" data-tools="ParticleEmitter;SFX;TweenService" onclick="openModal(this)">
           <video muted loop playsinline preload="metadata" poster="assets/img/lightning_thumb.webp">
             <source src="explosion_1.mp4" type="video/mp4">
           </video>
           <div class="meta"><strong>Impact Effect #1</strong> • Explosion</div>
         </div>
 
-        <div class="proj" data-title="Subtle Glow" data-desc="Low-cost glow using textured sprites and LOD" data-tools="Texture atlas;LOD;Audio loop" onclick="openModal(this)">
+        <div class="proj" data-title="Subtle Glow" data-desc="Low-cost glow using textured sprites and LOD" data-tools="" onclick="openModal(this)">
           <video muted loop playsinline preload="metadata" poster="assets/img/glow_thumb.webp">
             <source src="assets/videos/proj3_preview.mp4" type="video/mp4">
           </video>
@@ -96,7 +107,6 @@
       <p id="m-desc" style="color:var(--muted)"></p>
       <details style="margin-top:10px;color:var(--muted)">
         <summary style="cursor:pointer">Technical notes</summary>
-        <div style="margin-top:8px;color:#dfeef0">Optimized particle lifetime, reduced emitter count with texture atlases, audio loop crossfade for seamless activation.</div>
       </details>
     </div>
   </div>
@@ -190,6 +200,7 @@
   </script>
 </body>
 </html>
+
 
 
 
