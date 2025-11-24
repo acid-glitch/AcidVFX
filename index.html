@@ -7,7 +7,8 @@
   <meta name="description" content="Roblox VFX artist — particle systems, auras, animations, sound design." />
   <style>
     :root{--bg:#0b0c0f;--card:#0f1114;--accent:#7ee0b5;--muted:#95a0a8}
-    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,-apple-system; background:linear-gradient(180deg,#070708 0%,#0b0c0f 100%);color:#e6eef3}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,-apple-system; background:linear-gradient(180deg,#070708 0%,#0b0c0f 100%);color:#e6eef3}
     header{position:sticky;top:0;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(10,10,12,0.6),rgba(10,10,12,0.35));padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:30}
     .logo{font-weight:700;color:var(--accent)}
     nav a{color:#cfe9db;text-decoration:none;margin-left:18px;font-size:14px}
@@ -45,7 +46,7 @@
         <p>Greetings, I am Acid. I create detailed particle emitters, beam attachments, and simple particle animations. I started doing VFX not so long ago, I might not have years of experience, however I am capable of creating decent VFX designs for (in most cases) anime games. If you're interested, please take a look at some of my examples below:</p>
       </div>
 
-      <!-- Hero preview (using explosion_1.mp4 at repo root) -->
+      <!-- Hero preview -->
       <div class="preview-card">
         <video muted autoplay loop playsinline preload="metadata" width="360" poster="assets/img/haki_thumb.webp">
           <source src="explosion_1.mp4" type="video/mp4">
@@ -57,7 +58,7 @@
     <section id="work">
       <h2 style="margin-top:34px">Examples</h2>
       <div class="grid" id="projects">
-        <!-- Haki Aura project (video at repo root: haki_aura1.mp4) -->
+        <!-- Haki Aura -->
         <div class="proj" data-title="Haki Aura" data-desc="Glowing aura with subtle particles and sound sync" data-tools="Roblox Studio;Lua;Audio edit" onclick="openModal(this)">
           <video muted loop playsinline preload="metadata" poster="assets/img/haki_thumb.webp">
             <source src="haki_aura1.mp4" type="video/mp4">
@@ -65,7 +66,7 @@
           <div class="meta"><strong>Haki Aura</strong> • Aura</div>
         </div>
 
-        <!-- Lightning Burst now uses explosion_1.mp4 -->
+        <!-- Lightning Burst -->
         <div class="proj" data-title="Lightning Burst" data-desc="Burst particles with trailing sparks" data-tools="ParticleEmitter;SFX;TweenService" onclick="openModal(this)">
           <video muted loop playsinline preload="metadata" poster="assets/img/lightning_thumb.webp">
             <source src="explosion_1.mp4" type="video/mp4">
@@ -73,11 +74,20 @@
           <div class="meta"><strong>Impact Effect #1</strong> • Explosion</div>
         </div>
 
+        <!-- Subtle Glow -->
         <div class="proj" data-title="Subtle Glow" data-desc="Low-cost glow using textured sprites and LOD" data-tools="Texture atlas;LOD;Audio loop" onclick="openModal(this)">
           <video muted loop playsinline preload="metadata" poster="assets/img/glow_thumb.webp">
             <source src="assets/videos/proj3_preview.mp4" type="video/mp4">
           </video>
           <div class="meta"><strong>Subtle Glow</strong> • Aura</div>
+        </div>
+
+        <!-- Ultra Instinct Aura -->
+        <div class="proj" data-title="Ultra Instinct Aura" data-desc="Dynamic aura with shimmering particles and energy pulses" data-tools="Roblox Studio;Lua;ParticleEmitter;Audio sync" onclick="openModal(this)">
+          <video muted loop playsinline preload="metadata" poster="assets/img/ultra_thumb.webp">
+            <source src="ultra_instinct.mp4" type="video/mp4">
+          </video>
+          <div class="meta"><strong>Ultra Instinct Aura</strong> • Aura</div>
         </div>
       </div>
     </section>
@@ -106,7 +116,7 @@
   </footer>
 
   <script>
-    // Modal handling: open, close, click-outside, Esc, stop media
+    // Modal handling
     const modal = document.getElementById('modal');
     const modalCard = modal.querySelector('.card');
     const mediaContainer = document.getElementById('m-media');
@@ -118,81 +128,7 @@
       const sourceEl = el.querySelector('video source');
       const videoSrc = sourceEl ? sourceEl.getAttribute('src') : null;
 
-      document.getElementById('m-title').textContent = title;
-      document.getElementById('m-desc').textContent = desc;
-      document.getElementById('m-tools').textContent = tools;
-
-      mediaContainer.innerHTML = '';
-
-      if (videoSrc) {
-        const v = document.createElement('video');
-        v.src = videoSrc;
-        v.controls = true;
-        v.autoplay = true;
-        v.loop = true;
-        v.muted = true;
-        v.playsInline = true;
-        v.style.width = '100%';
-        mediaContainer.appendChild(v);
-        v.play().catch(()=>{});
-      }
-
-      modal.setAttribute('aria-hidden', 'false');
-      modalCard.focus();
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      const v = mediaContainer.querySelector('video');
-      if (v) {
-        try { v.pause(); v.removeAttribute('src'); v.load(); } catch(e){}
-      }
-      mediaContainer.innerHTML = '';
-      modal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-
-    modalCard.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
-        closeModal();
-      }
-    });
-
-    // Lazy-load videos: ensure the <source> paths are relative and present in repo
-    const vids = document.querySelectorAll('video[preload="metadata"]');
-    if ('IntersectionObserver' in window) {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            const v = e.target;
-            const src = v.querySelector('source')?.getAttribute('src');
-            if (src && !v.getAttribute('src')) v.src = src;
-            v.play().catch(()=>{});
-            obs.unobserve(v);
-          }
-        });
-      }, {rootMargin: '200px'});
-      vids.forEach(v => obs.observe(v));
-    } else {
-      vids.forEach(v => {
-        const src = v.querySelector('source')?.getAttribute('src');
-        if (src && !v.getAttribute('src')) v.src = src;
-      });
-    }
-  </script>
-</body>
-</html>
-
-
-
+      document.getElementById('
 
 
 
